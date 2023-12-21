@@ -1269,35 +1269,35 @@ const BasicDetails = (props) => {
         <Button
           color="#00b0ff"
           onClick={() => {
-            // Check if the email is valid
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(resumeInfo.profile.email)) {
-              alert("Please enter a valid email address");
-              return;
-            } 
-            // Check if the passport number is valid
-            const passportRegex = /^[A-Za-z0-9]{9}$/;
-            if (!passportRegex.test(resumeInfo.profile.pass)) {
-              alert("Please enter a valid passport number with exactly 9 alphanumeric characters");
-              return;
-            }
-            // Fields to validate
+           
+            // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            // if (!emailRegex.test(resumeInfo.profile.email)) {
+            //   alert("Please enter a valid email address");
+            //   return;
+            // } 
+            
+            // const passportRegex = /^[A-Za-z0-9]{9}$/;
+            // if (!passportRegex.test(resumeInfo.profile.pass)) {
+            //   alert("Please enter a valid passport number with exactly 9 alphanumeric characters");
+            //   return;
+            // }
+          
             const fieldsToValidate = ['hobbi1', 'ComputerSkills1', "lang", 'firstname', 'lastname', 'country', 'address', 'country_code', 'phone', 'pob', 'pass', 'Upload passport', 'mari', 'Gender', 'Computer skills', 'Candidate image'];
 
-            // Mapping of keys to alert messages
+            
             const alertMessages = {
               'lang': 'Choose Language to fill up the form',
               'mari': 'Marital Status',
               // Add more mappings as needed
             };
-            for (let key in resumeInfo.profile) {
-              if (fieldsToValidate.includes(key) && (!resumeInfo.profile[key] || resumeInfo.profile[key] === "Select...")) {
-                // Use the alert message from the mapping if it exists, otherwise use the key
-                const alertMessage = alertMessages[key] || key;
-                alert(`Please fill in the ${alertMessage} field`);
-                return;
-              }
-            }
+            // for (let key in resumeInfo.profile) {
+            //   if (fieldsToValidate.includes(key) && (!resumeInfo.profile[key] || resumeInfo.profile[key] === "Select...")) {
+            //     // Use the alert message from the mapping if it exists, otherwise use the key
+            //     const alertMessage = alertMessages[key] || key;
+            //     alert(`Please fill in the ${alertMessage} field`);
+            //     return;
+            //   }
+            // }
             // Check if all fields are filled
             setPage((p) => p + 1);
           }}

@@ -525,22 +525,38 @@ const PersonalDetails = (props) => {
   <Input
     type="file"
     onChange={(e) => {
-      const file = e.target.files[0];
-      setSelectedFile(file);
-      if (
-        resumeInfo?.edu?.post_graduate &&
-        resumeInfo.edu.post_graduate[i] &&
-        resumeInfo.edu.post_graduate[i].year_no
-      ) {
-        const ext = e.target.files[0].name.split(".")[e.target.files[0].name.split(".").length - 1];
-        handleInput("marksheet", `post_graduation_marksheet_${resumeInfo.edu.post_graduate[i].year_no}.${ext}`, i, e.target.files[0]);
-      } else {
-        console.error("Invalid data structure: post_graduate or year_no is undefined");
-      }
+      const file = e.target.files[i];
+setSelectedFile(file);
+      const newFiles = e.target.files;
+
+      const newFileArrays = [...resumeInfo.edu.fileE]; // Create a copy of the fileArrays array
+      newFileArrays[i] = Array.from(newFiles);
+
+      const updateValue = {
+        ...resumeInfo.edu,
+        fileE: newFileArrays,
+      };
+
+      const updateResumeInfo = { ...resumeInfo, edu: updateValue };
+      setResumeInfo(updateResumeInfo);
+      handleInpuGerman("writing_module_marksheet", "writing_module_marksheet", e.target.files[0])
     }}
+  
     variant="whatsapp"
     w="100%"
   />
+     {resumeInfo?.edu?.fileE[i] && (
+                    <div>
+                      <ul>
+                        Selected files:
+                        {resumeInfo.edu.fileE[i].map((file, fileIndex) => (
+                          <li  style={{ display: 'inline' }}>
+                            {file.name}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
   </FormControl>
   <FormControl>
   <Button 
@@ -758,33 +774,35 @@ const PersonalDetails = (props) => {
   <Input
     type="file"
     onChange={(e) => {
-      const file = e.target.files[0];
-    setSelectedFile(file);
-      // Check if resumeInfo and edu are defined
-      if (resumeInfo && resumeInfo.edu) {
-        // Check if under_graduate is an array and i is a valid index
-        const underGraduateArray = resumeInfo.edu.under_graduate;
-        if (Array.isArray(underGraduateArray) && i >= 0 && i < underGraduateArray.length) {
-          const ext = e.target.files[0].name.split(".")[e.target.files[0].name.split(".").length - 1];
-          handleInputUnderGraduate(
-            "marksheet",
-            `under_graduation_marksheet_${underGraduateArray[i].year_no}.${ext}`,
-            i,
-            e.target.files[0]
-            
-          );
-        } else {
-          // Handle the case when under_graduate is not an array or i is invalid
-          console.error("Invalid index or under_graduate is not an array");
-        }
-      } else {
-        // Handle the case when resumeInfo or edu is not defined
-        console.error("resumeInfo or edu is not defined");
-      }
+      const file = e.target.files[i];
+setSelectedFile(file);
+      const newFiles = e.target.files;
+
+      const newFileArrays = [...resumeInfo.edu.fileF]; // Create a copy of the fileArrays array
+      newFileArrays[i] = Array.from(newFiles);
+
+      const updateValue = {
+        ...resumeInfo.edu,
+        fileF: newFileArrays,
+      };
+
+      const updateResumeInfo = { ...resumeInfo, edu: updateValue };
+      setResumeInfo(updateResumeInfo);
     }}
     variant="whatsapp"
     w="100%"
-  />
+  />  {resumeInfo?.edu?.fileF[i] && (
+    <div>
+      <ul>
+        Selected files:
+        {resumeInfo.edu.fileF[i].map((file, fileIndex) => (
+          <li  style={{ display: 'inline' }}>
+            {file.name}
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
 </FormControl>
 
            </FormControl>
@@ -952,25 +970,37 @@ const PersonalDetails = (props) => {
           <Input
             type="file"
          
-            onChange={(e)=>{
-              // handleFileChange()
+            onChange={(e) => {
               const file = e.target.files[0];
-    setSelectedFile(file);
-              const ext = e.target.files[0].name.split(".")[e.target.files[0].name.split(".").length - 1]
+        setSelectedFile(file);
+              const newFiles = e.target.files;
+        
+              const newFileArrays = [...resumeInfo.edu.fileG]; // Create a copy of the fileArrays array
+              newFileArrays[0] = Array.from(newFiles);
+        
               const updateValue = {
-                ...resumeInfo.files,
-                twelweth_marksheet : e.target.files[0],
-              };
-              const updateedu = {
                 ...resumeInfo.edu,
-                twelweth: {...resumeInfo.edu.twelweth, marksheet:`twelweth_marksheet.${ext}`}
+                fileG: newFileArrays,
               };
-              const updateResumeInfo = { ...resumeInfo, files: updateValue, edu : updateedu };
+        
+              const updateResumeInfo = { ...resumeInfo, edu: updateValue };
               setResumeInfo(updateResumeInfo);
+              handleInpuGerman("writing_module_marksheet", "writing_module_marksheet", e.target.files[0])
             }}
             variant="whatsapp" // Apply the WhatsApp variant
             w="100%"
-          />
+          />{resumeInfo?.edu?.fileG[0] && (
+            <div>
+              <ul>
+                Selected files:
+                {resumeInfo.edu.fileG[0].map((file, fileIndex) => (
+                  <li  style={{ display: 'inline' }}>
+                    {file.name}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           </FormControl>
           <FormControl>
           <Button 
@@ -1093,7 +1123,7 @@ const PersonalDetails = (props) => {
               />
             </FormControl>
       </SimpleGrid>
-      <SimpleGrid columns={[1, 1, 1, 2]} spacing={1} placeItems="center">
+      <SimpleGrid columns={[1, 1, 1, 3]} spacing={1} placeItems="center">
         <FormControl>
         <formlable>Upload Marksheets(pdf)<Text  as="span" fontWeight="bold" color="red">  * </Text></formlable>
         </FormControl>
@@ -1102,27 +1132,40 @@ const PersonalDetails = (props) => {
           <Input
             type="file"
             key={inputKey}
-            onChange={(e)=>{
+            onChange={(e) => {
               const file = e.target.files[0];
-             setSelectedFile(file);
-              // handleFileChange()
-              
-              const ext = e.target.files[0].name.split(".")[e.target.files[0].name.split(".").length - 1]
+        setSelectedFile(file);
+              const newFiles = e.target.files;
+        
+              const newFileArrays = [...resumeInfo.edu.fileH]; // Create a copy of the fileArrays array
+              newFileArrays[0] = Array.from(newFiles);
+        
               const updateValue = {
-                ...resumeInfo.files,
-                eleventh_marksheet : e.target.files[0],
-              };
-              const updateedu = {
                 ...resumeInfo.edu,
-                eleventh: {...resumeInfo.edu.eleventh, marksheet:`eleventh_marksheet.${ext}`}
+                fileH: newFileArrays,
               };
-              const updateResumeInfo = { ...resumeInfo, files: updateValue, edu : updateedu };
+        
+              const updateResumeInfo = { ...resumeInfo, edu: updateValue };
               setResumeInfo(updateResumeInfo);
+              handleInpuGerman("writing_module_marksheet", "writing_module_marksheet", e.target.files[0])
             }}
             variant="whatsapp" // Apply the WhatsApp variant
-            w="7.8rem"
-          />
-       
+            w="100%"
+          />{resumeInfo?.edu?.fileH[0] && (
+            <div>
+              <ul>
+                Selected files:
+                {resumeInfo.edu.fileH[0].map((file, fileIndex) => (
+                  <li  style={{ display: 'inline' }}>
+                    {file.name}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+       </FormControl>
+       <FormControl>
+        
           <Button 
           marginLeft={4}
     color="#00b0ff" 
@@ -1144,9 +1187,7 @@ const PersonalDetails = (props) => {
   }}>
     Delete
   </Button>
-  {selectedFile && (
-  <Text mt={2}>Selected file: {selectedFile.name}</Text>
-)}
+ 
         </FormControl>
       </SimpleGrid>
       <FormControl>
@@ -1247,7 +1288,7 @@ const PersonalDetails = (props) => {
               />
             </FormControl>
       </SimpleGrid>
-      <SimpleGrid columns={[1, 1, 1, 2]} spacing={1} placeItems="center">
+      <SimpleGrid columns={[1, 1, 1, 3]} spacing={1} placeItems="center">
         <FormControl>
         <formlable>Upload Marksheets(pdf)<Text  as="span" fontWeight="bold" color="red">  * </Text></formlable>
         </FormControl>
@@ -1256,28 +1297,40 @@ const PersonalDetails = (props) => {
           <Input
             type="file"
             key={inputKey}
-            onChange={(e)=>{
+            onChange={(e) => {
               const file = e.target.files[0];
-             setSelectedFile(file);
-              // handleFileChange()
-              
-              const ext = e.target.files[0].name.split(".")[e.target.files[0].name.split(".").length - 1]
+        setSelectedFile(file);
+              const newFiles = e.target.files;
+        
+              const newFileArrays = [...resumeInfo.edu.fileI]; // Create a copy of the fileArrays array
+              newFileArrays[0] = Array.from(newFiles);
+        
               const updateValue = {
-                ...resumeInfo.files,
-                tenth_marksheet : e.target.files[0],
-              };
-              
-              const updateedu = {
                 ...resumeInfo.edu,
-                tenth: {...resumeInfo.edu.tenth, marksheet:`tenth_marksheet.${ext}`}
+                fileI: newFileArrays,
               };
-              const updateResumeInfo = { ...resumeInfo, files: updateValue, edu : updateedu };
+        
+              const updateResumeInfo = { ...resumeInfo, edu: updateValue };
               setResumeInfo(updateResumeInfo);
+              handleInpuGerman("writing_module_marksheet", "writing_module_marksheet", e.target.files[0])
             }}
             variant="whatsapp" // Apply the WhatsApp variant
-            w="7.8rem"
-          />
-          
+            w="100%"
+          />{resumeInfo?.edu?.fileI[0] && (
+            <div>
+              <ul>
+                Selected files:
+                {resumeInfo.edu.fileI[0].map((file, fileIndex) => (
+                  <li  style={{ display: 'inline' }}>
+                    {file.name}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          </FormControl>
+          <FormControl>
+            
        
          <Button 
           marginLeft={4}
@@ -1300,9 +1353,7 @@ const PersonalDetails = (props) => {
   }}>
     Delete
   </Button>
-  {selectedFile && (
-  <Text mt={2}>Selected file: {selectedFile.name}</Text>
-)}
+ 
         </FormControl>
       </SimpleGrid>
       <FormControl>

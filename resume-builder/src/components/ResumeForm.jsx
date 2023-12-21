@@ -179,6 +179,11 @@ const ResumeForm = () => {
       fileB: [],
       fileC: [],
       fileD: [],
+      fileE:[],
+      fileF:[],
+      fileG:[],
+      fileH:[],
+      fileI:[]
     },
     personal: {
       birthday: "",
