@@ -711,9 +711,9 @@ const PersonalDetails = (props) => {
                     <Input
                       type="text"
                       placeholder=""
-                      value={resumeInfo.work.Hosp[index]}
+                    
                       onChange={(e) => {
-                        const newYear = [...(resumeInfo?.work?.Hosp[index] || [])];
+                        const newYear = [...(resumeInfo?.work?.Hosp || [])];
                         newYear[index] = e.target.value;
 
                         setInternshipData({...internshipData,hospital_name:e.target.value})
@@ -732,9 +732,9 @@ const PersonalDetails = (props) => {
                     <Input
                       type="text"
                       placeholder=""
-                      value={resumeInfo.work.Dept2[index]}
+                    
                       onChange={(e) => {
-                        const newYear = [...(resumeInfo?.work?.Dept2[index] || [])];
+                        const newYear = [...(resumeInfo?.work?.Dept2 || [])];
                         newYear[index] = e.target.value;
 
                         setInternshipData({...internshipData,dept:e.target.value});
@@ -797,7 +797,7 @@ const PersonalDetails = (props) => {
                         <Input
                           type="text"
                           placeholder=""
-                          value={resumeInfo.profile.firstnjame}
+                      
                           onChange={(e) => {
                             const newYear = [...(resumeInfo?.work?.Dura || [])];
 

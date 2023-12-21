@@ -16,7 +16,8 @@ import {
   Stack,
   Select
 } from '@chakra-ui/react';
-import axios from "axios"
+import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 const RegistrationPage = (props) => {
   const navigate = useNavigate();
@@ -226,7 +227,11 @@ const RegistrationPage = (props) => {
               >
                 I accept the terms and conditions
               </Checkbox>
-              <Button type="submit" colorScheme="blackAlpha" width="100%" isDisabled={!formData.termsAccepted}>
+              <Button type="submit"  onClick={() => {
+                alert("Registration Sucessfull")
+              navigate('/')
+            }}
+            colorScheme="blackAlpha" width="100%" isDisabled={!formData.termsAccepted}>
                 Register
               </Button>
             </Stack>

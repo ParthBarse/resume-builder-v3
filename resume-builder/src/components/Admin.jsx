@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 const Admin = () => {
+  const navigate = useNavigate();
   const [students, setStudents] = useState([]);
   const [disApproveComment, setDisAppoveComment] = useState('')
   const [popUp, setPopUp] = useState(false)
@@ -548,13 +549,21 @@ const host = `${process.env.REACT_APP_HOST}/public`
                   </div>
                   </Td>
                   <Td>
-                        <button className='p-2 bg-green-700 rounded-md text-white' onClick={()=>approveResume(student.email, student.resume._id)}>Approve</button>
+                        <button className='p-2 bg-green-700 rounded-md text-white' onClick={() => {
+  approveResume(student.email, student.resume._id);
+  navigate('/Admin');
+}}>Approve</button>
                   </Td>
                   <Td>
-                        <button className='p-2 bg-yellow-600 rounded-md text-white' onClick={()=>{setPopUp(true); setDisAppoveStudent(student)}}>Disapprove</button>
+                        <button className='p-2 bg-yellow-600 rounded-md text-white' onClick={()=>{
+    setPopUp(true); setDisAppoveStudent(student);
+   }}>Disapprove</button>
                   </Td>
                   <Td>
-                        <button className='p-2 bg-red-700 rounded-md text-white' onClick={()=>deleteResume(student.resume._id , student._id)}>Delete</button>
+                        <button className='p-2 bg-red-700 rounded-md text-white' onClick={()=>
+                          
+    {deleteResume(student.resume._id , student._id);
+      navigate('/Admin');}}>Delete</button>
                   </Td>
                 </Tr>
               ))}
