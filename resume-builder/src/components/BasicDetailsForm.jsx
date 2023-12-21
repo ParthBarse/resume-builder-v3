@@ -130,7 +130,7 @@ const BasicDetails = (props) => {
   };
 
 
-
+  const [selectedCandidateFile, setSelectedCandidateFile] = useState(null);
 
 
 
@@ -1209,30 +1209,30 @@ const BasicDetails = (props) => {
          
         </FormControl>
         <FormControl>  <Input
-        key={inputKey}
-            type="file"
-            onChange={(e) => {
-              const ext = e.target.files[0].name.split(".")[e.target.files[0].name.split(".").length - 1]
-              const file = e.target.files[0];
-              let localSelectedFile = file;
-              setSelectedFile(localSelectedFile);
-              const updateValue = {
-                ...resumeInfo.files,
-                candidate: e.target.files[0],
-              };
-              const updateProfile = {
-                ...resumeInfo.profile,
-                candidate: `candidate.${ext}`,
-              };
-              const updateResumeInfo = { ...resumeInfo, files: updateValue, profile : updateProfile };
-              setResumeInfo(updateResumeInfo);
-            }}
-            colorScheme="#00b0ff"
-            w="7.3rem"
-            rightIcon={<AddIcon />}
-          />    <Button color="#00b0ff" marginLeft={2} marginRight={4} onClick={() => {
-            if (selectedFile) {
-              window.open(URL.createObjectURL(selectedFile));
+  key={inputKey}
+  type="file"
+  onChange={(e) => {
+    const ext = e.target.files[0].name.split(".")[e.target.files[0].name.split(".").length - 1]
+    const file = e.target.files[0];
+    let localSelectedFile = file;
+    setSelectedCandidateFile(localSelectedFile); // Use the new state variable here
+    const updateValue = {
+      ...resumeInfo.files,
+      candidate: e.target.files[0],
+    };
+    const updateProfile = {
+      ...resumeInfo.profile,
+      candidate: `candidate.${ext}`,
+    };
+    const updateResumeInfo = { ...resumeInfo, files: updateValue, profile : updateProfile };
+    setResumeInfo(updateResumeInfo);
+  }}
+  colorScheme="#00b0ff"
+  w="7.3rem"
+  rightIcon={<AddIcon />}
+/>   <Button color="#00b0ff" marginLeft={2} marginRight={4} onClick={() => {
+            if (selectedCandidateFile) {
+              window.open(URL.createObjectURL(selectedCandidateFile));
             } else {
               alert('Please upload a file before trying to view it.');
             }
@@ -1240,7 +1240,7 @@ const BasicDetails = (props) => {
           View
         </Button>
         <Button color="red" onClick={() => {
-  setSelectedFile(null);
+  setSelectedCandidateFile(null); // Use setSelectedCandidateFile here
   const updateValue = {
     ...resumeInfo.files,
     candidate: null,
@@ -1255,8 +1255,8 @@ const BasicDetails = (props) => {
 }}>
   Delete
 </Button>
-       {selectedFile && (
-            <Text mt={2}>Selected file: {selectedFile.name}</Text>
+       {selectedCandidateFile && ( // Use selectedCandidateFile here
+            <Text mt={2}>Selected file: {selectedCandidateFile.name}</Text>
           )}</FormControl>
       </SimpleGrid>
       <br />

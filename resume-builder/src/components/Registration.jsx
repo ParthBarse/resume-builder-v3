@@ -1,5 +1,9 @@
 // RegistrationPage.js
 import React, { useState } from 'react';
+// import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
+
 import {
   Box,
   Flex,
@@ -15,6 +19,7 @@ import {
 import axios from "axios"
 
 const RegistrationPage = (props) => {
+  const navigate = useNavigate();
   const { setResumeInfo, setPage } = props;
   const [formData, setFormData] = useState({
     first_name: '',
@@ -33,36 +38,71 @@ const RegistrationPage = (props) => {
   const [registrationComplete, setRegistrationComplete] = useState(false);
 
   const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    let inputValue = type === 'checkbox' ? checked : value;
+
+    if (name === 'mobile') {
+      inputValue = value.replace(/[^0-9]/g, '');
+    }
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value,
+      [name]: inputValue,
     });
   };
-  const handleRegistration = async (e) => {
-    e.preventDefault();
 
-    // Simulate registration process (send data to backend, receive confirmation, etc.)
-    console.log('Simulating registration process:', formData);
-    console.log(process.env.REACT_APP_HOST);
-    const res = await axios({
-      method : "post",
-      url : `${process.env.REACT_APP_HOST}/register`,
-      data : formData
-    })
-    console.log(res);
-    if (res.data.success === true) {
-      localStorage.setItem("token", res.data.authToken)
-      setRegistrationComplete(true);
-    }
-    // Set registrationComplete to true for demo purposes
-    else{
-      alert(res.data.message || "Could not register")
-    }
-  };
+    const handleRegistration = async (e) => {
+      e.preventDefault();
+
+      // Validate email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        alert('Please enter a valid email address');
+        return;
+      }
+
+      // Validate phone number
+      const phoneRegex = /^\d{10}$/;
+      if (!phoneRegex.test(formData.mobile)) {
+        alert('Please enter a valid 10-digit mobile number');
+        return;
+      }
+
+      // Validate password
+      // Add your own password validation criteria here
+      if (formData.password.length < 8) {
+        alert('Password must be at least 8 characters long');
+        return;
+      }
+
+      // Simulate registration process (send data to backend, receive confirmation, etc.)
+      console.log('Simulating registration process:', formData);
+      console.log(process.env.REACT_APP_HOST);
+
+      try {
+        const res = await axios({
+          method: 'post',
+          url: `${process.env.REACT_APP_HOST}/register`,
+          data: formData,
+        });
+  
+        if (res.data.success === true) {
+          localStorage.setItem('token', res.data.authToken);
+          setRegistrationComplete(true);
+          alert('Registration successful! Click OK to go to the login page.');
+          navigate('/');
+        } else {
+          alert(res.data.message || 'Could not register');
+        }
+      } catch (error) {
+        console.error('Error during registration:', error);
+        alert('An error occurred during registration');
+      }
+    };
 
   return (
     <Flex align="center" justify="center" h="100vh" marginBottom={4}>
-<Box
+ <Box
   p={4}  // Decrease padding to make it smaller
   maxWidth="400px"  // Adjust the maximum width as needed
   borderWidth={3}
@@ -118,6 +158,8 @@ const RegistrationPage = (props) => {
                 onChange={handleInputChange}
                 color="black"
                 bg="white"
+                maxLength={10}
+                pattern="\d*"
               />
             </FormControl>
             <FormControl mb={4} isRequired>
