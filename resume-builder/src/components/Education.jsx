@@ -106,10 +106,24 @@ const PersonalDetails = (props) => {
   };
 
   const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedPostGraduationFile, setSelectedPostGraduationFile] = useState({});
+  const [selectedUnderGraduateFile, setSelectedUnderGraduateFile] = useState({});
+  const [selectedFile11, setSelectedFile11] = useState(null);
+  const [selectedFile12, setSelectedFile12] = useState(null);
+  const [selectedFile10, setSelectedFile10] = useState(null);
+
   
   const [inputKey, setInputKey] = useState(Date.now());
 
-
+  const handleDeleteFile = (i, fileIndex) => {
+    setResumeInfo(prevInfo => {
+      const newInfo = { ...prevInfo };
+      if (newInfo.edu && newInfo.edu.fileE && newInfo.edu.fileE[i]) {
+        newInfo.edu.fileE[i].splice(fileIndex, 1);
+      }
+      return newInfo;
+    });
+  };
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     setSelectedFile(file);
@@ -393,6 +407,7 @@ const PersonalDetails = (props) => {
         blank_year: updatedArrayOfObjects,
       },
     });
+    
   };
 
 
@@ -525,45 +540,45 @@ const PersonalDetails = (props) => {
   <Input
     type="file"
     onChange={(e) => {
-      const file = e.target.files[i];
-setSelectedFile(file);
-      const newFiles = e.target.files;
-
-      const newFileArrays = [...resumeInfo.edu.fileE]; // Create a copy of the fileArrays array
-      newFileArrays[i] = Array.from(newFiles);
-
-      const updateValue = {
-        ...resumeInfo.edu,
-        fileE: newFileArrays,
-      };
-
-      const updateResumeInfo = { ...resumeInfo, edu: updateValue };
-      setResumeInfo(updateResumeInfo);
-      handleInpuGerman("writing_module_marksheet", "writing_module_marksheet", e.target.files[0])
+      const file = e.target.files[0];
+      setSelectedPostGraduationFile(prevFiles => ({
+        ...prevFiles,
+        [i]: file, // Use the index as the key
+      }));
+      if (
+        resumeInfo?.edu?.post_graduate &&
+        resumeInfo.edu.post_graduate[i] &&
+        resumeInfo.edu.post_graduate[i].year_no
+      ) {
+        const ext = e.target.files[0].name.split(".")[e.target.files[0].name.split(".").length - 1];
+        handleInput("marksheet", `post_graduation_marksheet_${resumeInfo.edu.post_graduate[i].year_no}.${ext}`, i, e.target.files[0]);
+      } else {
+        console.error("Invalid data structure: post_graduate or year_no is undefined");
+      }
     }}
-  
     variant="whatsapp"
     w="100%"
   />
      {resumeInfo?.edu?.fileE[i] && (
-                    <div>
-                      <ul>
-                        Selected files:
-                        {resumeInfo.edu.fileE[i].map((file, fileIndex) => (
-                          <li  style={{ display: 'inline' }}>
-                            {file.name}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+  <div>
+    <ul>
+      Selected files:
+      {resumeInfo.edu.fileE[i].map((file, fileIndex) => (
+        <li style={{ display: 'inline' }}>
+          {file.name}
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
   </FormControl>
   <FormControl>
   <Button 
     color="#00b0ff" 
     onClick={() => {
-      if (selectedFile) {
-        window.open(URL.createObjectURL(selectedFile));
+      const file = selectedPostGraduationFile[i];
+      if (file) {
+        window.open(URL.createObjectURL(file));
       } else {
         alert('Please upload a file before trying to view it.');
       }
@@ -573,11 +588,16 @@ setSelectedFile(file);
     View
   </Button>
   <Button color="red" onClick={() => {
-    setSelectedFile(null);
-    handleAddInput();
-  }}>
-    Delete
-  </Button>
+        setSelectedPostGraduationFile(prevFiles => {
+          const newFiles = { ...prevFiles };
+          delete newFiles[i];
+          return newFiles;
+        });
+        handleDeleteFile(i);
+        handleAddInput();
+      }}>
+        Delete
+      </Button>
 
 </FormControl>
 
@@ -771,27 +791,40 @@ setSelectedFile(file);
 
             <FormControl>
             <FormControl>
-  <Input
+            <Input
     type="file"
     onChange={(e) => {
-      const file = e.target.files[i];
-setSelectedFile(file);
-      const newFiles = e.target.files;
-
-      const newFileArrays = [...resumeInfo.edu.fileF]; // Create a copy of the fileArrays array
-      newFileArrays[i] = Array.from(newFiles);
-
-      const updateValue = {
-        ...resumeInfo.edu,
-        fileF: newFileArrays,
-      };
-
-      const updateResumeInfo = { ...resumeInfo, edu: updateValue };
-      setResumeInfo(updateResumeInfo);
+      const file = e.target.files[0];
+setSelectedUnderGraduateFile(prevFiles => ({
+  ...prevFiles,
+  [i]: file, // Use the index as the key
+}));
+      // Check if resumeInfo and edu are defined
+      if (resumeInfo && resumeInfo.edu) {
+        // Check if under_graduate is an array and i is a valid index
+        const underGraduateArray = resumeInfo.edu.under_graduate;
+        if (Array.isArray(underGraduateArray) && i >= 0 && i < underGraduateArray.length) {
+          const ext = e.target.files[0].name.split(".")[e.target.files[0].name.split(".").length - 1];
+          handleInputUnderGraduate(
+            "marksheet",
+            `under_graduation_marksheet_${underGraduateArray[i].year_no}.${ext}`,
+            i,
+            e.target.files[0]
+            
+          );
+        } else {
+          // Handle the case when under_graduate is not an array or i is invalid
+          console.error("Invalid index or under_graduate is not an array");
+        }
+      } else {
+        // Handle the case when resumeInfo or edu is not defined
+        console.error("resumeInfo or edu is not defined");
+      }
     }}
     variant="whatsapp"
     w="100%"
-  />  {resumeInfo?.edu?.fileF[i] && (
+  />
+  {/* {resumeInfo?.edu?.fileF[i] && (
     <div>
       <ul>
         Selected files:
@@ -802,7 +835,7 @@ setSelectedFile(file);
         ))}
       </ul>
     </div>
-  )}
+  )} */}
 </FormControl>
 
            </FormControl>
@@ -812,8 +845,9 @@ setSelectedFile(file);
            <Button 
     color="#00b0ff" 
     onClick={() => {
-      if (selectedFile) {
-        window.open(URL.createObjectURL(selectedFile));
+      const file = selectedUnderGraduateFile[i];
+      if (file) {
+        window.open(URL.createObjectURL(file));
       } else {
         alert('Please upload a file before trying to view it.');
       }
@@ -823,7 +857,11 @@ setSelectedFile(file);
     View
   </Button>
   <Button color="red" onClick={() => {
-    setSelectedFile(null);
+    setSelectedUnderGraduateFile(prevFiles => {
+      const newFiles = { ...prevFiles };
+      delete newFiles[i];
+      return newFiles;
+    });
     handleAddInput();
   }}>
     Delete
@@ -967,25 +1005,23 @@ setSelectedFile(file);
         </FormControl>
 
         <FormControl>
-          <Input
+        <Input
             type="file"
          
             onChange={(e) => {
               const file = e.target.files[0];
-        setSelectedFile(file);
-              const newFiles = e.target.files;
-        
-              const newFileArrays = [...resumeInfo.edu.fileG]; // Create a copy of the fileArrays array
-              newFileArrays[0] = Array.from(newFiles);
-        
+        setSelectedFile12(file);
+              const ext = e.target.files[0].name.split(".")[e.target.files[0].name.split(".").length - 1]
               const updateValue = {
-                ...resumeInfo.edu,
-                fileG: newFileArrays,
+                ...resumeInfo.files,
+                twelweth_marksheet : e.target.files[0],
               };
-        
-              const updateResumeInfo = { ...resumeInfo, edu: updateValue };
+              const updateedu = {
+                ...resumeInfo.edu,
+                twelweth: {...resumeInfo.edu.twelweth, marksheet:`twelweth_marksheet.${ext}`}
+              };
+              const updateResumeInfo = { ...resumeInfo, files: updateValue, edu : updateedu };
               setResumeInfo(updateResumeInfo);
-              handleInpuGerman("writing_module_marksheet", "writing_module_marksheet", e.target.files[0])
             }}
             variant="whatsapp" // Apply the WhatsApp variant
             w="100%"
@@ -1006,8 +1042,8 @@ setSelectedFile(file);
           <Button 
     color="#00b0ff" 
     onClick={() => {
-      if (selectedFile) {
-        window.open(URL.createObjectURL(selectedFile));
+      if (selectedFile12) {
+        window.open(URL.createObjectURL(selectedFile12));
       } else {
         alert('Please upload a file before trying to view it.');
       }
@@ -1017,7 +1053,7 @@ setSelectedFile(file);
     View
   </Button>
   <Button color="red" onClick={() => {
-    setSelectedFile(null);
+    setSelectedFile12(null);
     handleAddInput();
   }}>
     Delete
@@ -1129,29 +1165,30 @@ setSelectedFile(file);
         </FormControl>
 
         <FormControl>
-          <Input
+        <Input
             type="file"
             key={inputKey}
             onChange={(e) => {
               const file = e.target.files[0];
-        setSelectedFile(file);
-              const newFiles = e.target.files;
-        
-              const newFileArrays = [...resumeInfo.edu.fileH]; // Create a copy of the fileArrays array
-              newFileArrays[0] = Array.from(newFiles);
-        
+        setSelectedFile11(file);
+              // handleFileChange()
+              
+              const ext = e.target.files[0].name.split(".")[e.target.files[0].name.split(".").length - 1]
               const updateValue = {
-                ...resumeInfo.edu,
-                fileH: newFileArrays,
+                ...resumeInfo.files,
+                eleventh_marksheet : e.target.files[0],
               };
-        
-              const updateResumeInfo = { ...resumeInfo, edu: updateValue };
+              const updateedu = {
+                ...resumeInfo.edu,
+                eleventh: {...resumeInfo.edu.eleventh, marksheet:`eleventh_marksheet.${ext}`}
+              };
+              const updateResumeInfo = { ...resumeInfo, files: updateValue, edu : updateedu };
               setResumeInfo(updateResumeInfo);
-              handleInpuGerman("writing_module_marksheet", "writing_module_marksheet", e.target.files[0])
             }}
             variant="whatsapp" // Apply the WhatsApp variant
-            w="100%"
-          />{resumeInfo?.edu?.fileH[0] && (
+            w="7.8rem"
+          />
+       {resumeInfo?.edu?.fileH[0] && (
             <div>
               <ul>
                 Selected files:
@@ -1170,8 +1207,8 @@ setSelectedFile(file);
           marginLeft={4}
     color="#00b0ff" 
     onClick={() => {
-      if (selectedFile) {
-        window.open(URL.createObjectURL(selectedFile));
+      if (selectedFile11) {
+        window.open(URL.createObjectURL(selectedFile11));
       } else {
         alert('Please upload a file before trying to view it.');
       }
@@ -1181,7 +1218,7 @@ setSelectedFile(file);
     View
   </Button>
   <Button color="red" onClick={() => {
-    setSelectedFile(null);
+    setSelectedFile11(null);
     setInputKey(Date.now());
     handleAddInput();
   }}>
@@ -1294,28 +1331,29 @@ setSelectedFile(file);
         </FormControl>
 
         <FormControl>
-          <Input
+        <Input
             type="file"
             key={inputKey}
             onChange={(e) => {
               const file = e.target.files[0];
-        setSelectedFile(file);
-              const newFiles = e.target.files;
-        
-              const newFileArrays = [...resumeInfo.edu.fileI]; // Create a copy of the fileArrays array
-              newFileArrays[0] = Array.from(newFiles);
-        
+        setSelectedFile10(file);
+              // handleFileChange()
+              
+              const ext = e.target.files[0].name.split(".")[e.target.files[0].name.split(".").length - 1]
               const updateValue = {
-                ...resumeInfo.edu,
-                fileI: newFileArrays,
+                ...resumeInfo.files,
+                tenth_marksheet : e.target.files[0],
               };
-        
-              const updateResumeInfo = { ...resumeInfo, edu: updateValue };
+              
+              const updateedu = {
+                ...resumeInfo.edu,
+                tenth: {...resumeInfo.edu.tenth, marksheet:`tenth_marksheet.${ext}`}
+              };
+              const updateResumeInfo = { ...resumeInfo, files: updateValue, edu : updateedu };
               setResumeInfo(updateResumeInfo);
-              handleInpuGerman("writing_module_marksheet", "writing_module_marksheet", e.target.files[0])
             }}
             variant="whatsapp" // Apply the WhatsApp variant
-            w="100%"
+            w="7.8rem"
           />{resumeInfo?.edu?.fileI[0] && (
             <div>
               <ul>
@@ -1336,8 +1374,8 @@ setSelectedFile(file);
           marginLeft={4}
     color="#00b0ff" 
     onClick={() => {
-      if (selectedFile) {
-        window.open(URL.createObjectURL(selectedFile));
+      if (selectedFile10) {
+        window.open(URL.createObjectURL(selectedFile10));
       } else {
         alert('Please upload a file before trying to view it.');
       }
@@ -1347,7 +1385,7 @@ setSelectedFile(file);
     View
   </Button>
   <Button color="red" onClick={() => {
-    setSelectedFile(null);
+    setSelectedFile10(null);
     setInputKey(Date.now());
     handleAddInput();
   }}>
