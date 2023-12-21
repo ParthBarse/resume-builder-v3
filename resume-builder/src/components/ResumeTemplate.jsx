@@ -186,10 +186,18 @@ const ResumeTemplate = (props) => {
           <Heading as="h3" fontSize="m" >
             Break year(ifany)
           </Heading>
-          <Text style={{ fontWeight: 'bold' }}> From: {resumeInfo.edu?.blank_year[0]?.from_date}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; To:</Text> {resumeInfo.edu?.blank_year[0]?.to_date}<br />
+          {
+  Array.from({ length:  resumeInfo.edu?.blank_year?.length }, (_, i) => (
+    <div key={i}>
+     <FormLabel display="inline" >  
+     <Text as="span" style={{ fontWeight: 'bold' }}> From:</Text>  {resumeInfo.edu?.blank_year[i]?.from_date}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     <Text as="span" style={{ fontWeight: 'bold' }}> To:</Text> {resumeInfo.edu?.blank_year[i]?.to_date}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-          <Text style={{ fontWeight: 'bold' }}>Reason for break: {resumeInfo.edu.blank_year[0]?.reason}
-</Text>
+     <Text as="span" style={{ fontWeight: 'bold' }}> Reason for break:</Text>  {resumeInfo.edu.blank_year[i]?.reason}<br />
+   </FormLabel> </div> 
+  ))
+}
+        
 
           <Heading as="h3" fontSize="m" >
             Language Proficiency / Sprachkenntnisse:

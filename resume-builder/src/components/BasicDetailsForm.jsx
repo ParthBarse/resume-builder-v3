@@ -1290,8 +1290,6 @@ const BasicDetails = (props) => {
               'mari': 'Marital Status',
               // Add more mappings as needed
             };
-
-            // Check if all fields are filled
             for (let key in resumeInfo.profile) {
               if (fieldsToValidate.includes(key) && (!resumeInfo.profile[key] || resumeInfo.profile[key] === "Select...")) {
                 // Use the alert message from the mapping if it exists, otherwise use the key
@@ -1300,6 +1298,7 @@ const BasicDetails = (props) => {
                 return;
               }
             }
+            // Check if all fields are filled
             setPage((p) => p + 1);
           }}
           rightIcon={<ChevronRightIcon />}

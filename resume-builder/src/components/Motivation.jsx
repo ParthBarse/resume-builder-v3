@@ -270,10 +270,7 @@ const Motivation = (props) => {
 
 
         </FormControl><br/>
-        <SimpleGrid columns={[1, 1, 1, 3]} spacing={4} placeItems="center">
-
-        
-      </SimpleGrid>
+     
     </Stack>
   );
 };

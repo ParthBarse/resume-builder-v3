@@ -8,6 +8,7 @@ import {
   Stack,
   HStack,
 } from "@chakra-ui/react";
+
 import React, { useEffect, useState } from "react";
 import { useMediaQuery } from "@chakra-ui/react";
 import BasicDetails from "./BasicDetailsForm";
@@ -22,6 +23,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@chakra-ui/react";
 
 const ResumeForm = () => {
+  
   const [page, setPage] = React.useState(0);
   const [isMobile] = useMediaQuery("(max-width: 798px)");
   const [token, setToken] = useState(false)
@@ -228,10 +230,14 @@ const ResumeForm = () => {
     internship: {
       from: [],
       to: [],
-      Hosp_name: [],
-      Dept_name: [],
-      Duty: [],
-      Dura: [],
+      Hosp: [],
+      Dept: [],
+      Duty: [  {
+        dut: []
+      }],
+      Dura: [ {
+        dur: []
+      }],
     }
 
   };
@@ -345,6 +351,7 @@ const ResumeForm = () => {
       data: formData
     })
     alert('saved successfully!')
+    navigate('/Create')
     console.log(res);
   }
 

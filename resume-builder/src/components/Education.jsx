@@ -1713,7 +1713,7 @@ const PersonalDetails = (props) => {
                         const updateResumeInfo = { ...resumeInfo, edu: updateValue };
                         setResumeInfo(updateResumeInfo);
                         
-    handleInpuGerman("from", formattedDate)
+ //  handleInpuGerman("from", formattedDate)
                       }
                     }}
                   />
@@ -1746,7 +1746,7 @@ const PersonalDetails = (props) => {
       
                         const updateResumeInfo = { ...resumeInfo, edu: updateValue };
                         setResumeInfo(updateResumeInfo);
-                        handleInpuGerman("to", formattedDate)
+               //         handleInpuGerman("to", formattedDate)
                       }
                     }}
                   />
@@ -1759,24 +1759,28 @@ const PersonalDetails = (props) => {
                     type="date"
                     
                     onChange={(e) => {
+
+
                       const selectedDate = new Date(e.target.value + 'T00:00:00'); // Adding time component
-                  
+  
                       if (!isNaN(selectedDate.getTime())) {
                         const day = String(selectedDate.getDate()).padStart(2, '0');
                         const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
                         const year = selectedDate.getFullYear();
-                  
+  
                         const formattedDate = `${day}-${month}-${year}`;
-                  
+                        const newYear = [...(resumeInfo?.edu?.Certificate || [])];
+                        newYear[0] = formattedDate;
+  
                         const updateValue = {
                           ...resumeInfo.edu,
-                          german: {...resumeInfo.edu.german, certification_date :formattedDate },
+                          Certificate: newYear
                         };
-                  
-                        const updateResumeInfo = { ...resumeInfo, edu: updateValue };
+                        const updateResumeInfo = {
+                          ...resumeInfo,
+                          edu: updateValue,
+                        };
                         setResumeInfo(updateResumeInfo);
-                        
-    handleInpuGerman("certification_date", formattedDate)
                       }
                     }}
                   />
@@ -1830,7 +1834,7 @@ const PersonalDetails = (props) => {
                  
                   <FormControl>
                   <Button 
-          marginLeft={4}
+          
     color="#00b0ff" 
     onClick={() => {
       if (selectedFile) {
@@ -1840,18 +1844,20 @@ const PersonalDetails = (props) => {
       }
     }} 
     marginRight={"4%"}
-  >
+    marginLeft={"4%"}
+   >
     View
   </Button>
+
   <Button color="red" onClick={() => {
-    setSelectedFile(null);
-    setInputKey(Date.now());
-    handleAddInput();
+   setSelectedFile(null);
+   setInputKey(Date.now());
+   handleAddInput();
   }}>
     Delete
   </Button>  
 
-                  </FormControl>
+  </FormControl>
                   
                   <FormControl>
                     <FormLabel>Speaking Module Marksheet<Text  as="span" fontWeight="bold" color="red">  * </Text></FormLabel>
@@ -2229,7 +2235,7 @@ const PersonalDetails = (props) => {
 </FormControl>
                   <FormControl>
                   <Button 
-          marginLeft={4}
+          
     color="#00b0ff" 
     onClick={() => {
       if (selectedFile) {
@@ -2249,9 +2255,6 @@ const PersonalDetails = (props) => {
   }}>
     Delete
   </Button>
-  {selectedFile && (
-  <Text mt={2}>Selected file: {selectedFile.name}</Text>
-)} 
 
                   </FormControl>
                   <FormControl>
@@ -2300,7 +2303,7 @@ const PersonalDetails = (props) => {
                   <FormControl>
 
                   <Button 
-          marginLeft={4}
+          
     color="#00b0ff" 
     onClick={() => {
       if (selectedFile) {
@@ -2423,7 +2426,7 @@ const PersonalDetails = (props) => {
                   <FormControl>
 
                   <Button 
-          marginLeft={4}
+          
     color="#00b0ff" 
     onClick={() => {
       if (selectedFile) {
